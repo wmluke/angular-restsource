@@ -39,6 +39,7 @@ module.exports = function (grunt) {
                 'uglify'
             ],
             'integration-test': [
+                'express:dev',
                 'karma:e2e'
             ],
             verify: [],
