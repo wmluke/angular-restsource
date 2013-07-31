@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "0.10"
+before_script:
+  - npm install grunt-cli -g
+  - npm install bower -g
+  - bower install
+notifications:
+  hipchat: 61e188f865b9ca18a0307b8b3ff3ab@Github
