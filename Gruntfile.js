@@ -28,7 +28,7 @@ module.exports = function (grunt) {
                 'csslint'
             ],
             compile: [
-                'compass',
+                'compass'
             ],
             test: [
                 'connect:test',
@@ -94,6 +94,18 @@ module.exports = function (grunt) {
                             mountFolder(connect, 'test')
                         ];
                     }
+                }
+            }
+        },
+        express: {
+            options: {
+                port: 9999,
+                background: true,
+                output: '.+'
+            },
+            dev: {
+                options: {
+                    script: 'server.js'
                 }
             }
         },
@@ -179,7 +191,7 @@ module.exports = function (grunt) {
             },
             scripts: {
                 src: [
-                    '<%= yeoman.src %>/scripts/**/*.js',
+                    '<%= yeoman.src %>/scripts/**/*.js'
                 ],
                 dest: '<%= yeoman.dist %>/scripts/<%= pkg.name %>.js'
             },
@@ -227,6 +239,7 @@ module.exports = function (grunt) {
         'package',
         'livereload-start',
         'connect:livereload',
+        'express:dev',
         'open',
         'watch'
     ]);

@@ -3,12 +3,10 @@
 </header>
 
 <div class="hero-unit">
-    <h1>HERO UNIT</h1>
-    <a ng-click="show=!show">Click Me</a>
-
-    <h2 ng-show="show">Now you see me</h2>
-
-    <h2 ng-show="!show">Now you don't</h2>
+    <h1>Users</h1>
+    <ul>
+        <li ng-repeat="user in users">{{ user.name }}</li>
+    </ul>
 </div>
 
 <footer>
