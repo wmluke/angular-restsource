@@ -27,9 +27,7 @@ module.exports = function (grunt) {
                 'jshint',
                 'csslint'
             ],
-            compile: [
-                'compass'
-            ],
+            compile: [],
             test: [
                 'connect:test',
                 'karma:unit'
