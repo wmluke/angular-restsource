@@ -3,26 +3,13 @@ var cors = require('cors');
 var _ = require('underscore');
 var app = express();
 
-var allowCrossDomain = function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
-    // intercept OPTIONS method
-    if ('OPTIONS' == req.method) {
-        res.send(200);
-    } else {
-        next();
-    }
-};
-
-//app.use(allowCrossDomain);
-
 app.use(cors({
     origin: true,
     credentials: true,
     methods: 'GET,PUT,POST,DELETE'
 }));
+
+app.use(express.bodyParser());
 
 app.configure(function () {
     app.set('port', process.env.PORT || 3000);
@@ -35,7 +22,7 @@ var users = {
         name: 'Luke'
     },
     2: {
-        id: 1,
+        id: 2,
         name: 'Matt'
     },
     3: {
