@@ -3,5 +3,5 @@ node_modules
 .sass-cache
 .idea
 libpeerconnection.log
-test-reports
+reports
 app/components

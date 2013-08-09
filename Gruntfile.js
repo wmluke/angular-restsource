@@ -33,7 +33,7 @@ module.exports = function (grunt) {
                 'karma:unit'
             ],
             package: [
-                'concat',
+                'concat:scripts',
                 'uglify'
             ],
             'integration-test': [
