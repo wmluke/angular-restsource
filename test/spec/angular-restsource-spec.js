@@ -10,13 +10,17 @@ describe('Service: Restsource', function () {
     // load the service's module
     beforeEach(module('angular-restsource'));
 
+    beforeEach(module(function (restsourceProvider) {
+        restsourceProvider.provide('userRestsource', '/api/user');
+    }));
+
     // instantiate service
-    var _Restsource,
+    var restsource,
         $httpBackend;
 
-    beforeEach(inject(function (Restsource, $injector) {
+    beforeEach(inject(function (_restsource_, $injector) {
         $httpBackend = $injector.get('$httpBackend');
-        _Restsource = Restsource;
+        restsource = _restsource_;
     }));
 
     afterEach(function () {
@@ -24,10 +28,10 @@ describe('Service: Restsource', function () {
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    describe('Restsource.create', function () {
+    describe('restsource', function () {
 
         it('should create a Restsource instance with the root url', function () {
-            var fooResource = _Restsource.create('/api/foo');
+            var fooResource = restsource('/api/foo');
             expect(fooResource.rootUrl).toBe('/api/foo');
         });
     });
@@ -39,9 +43,10 @@ describe('Service: Restsource', function () {
             theResponseBody = {foo: 'bar'},
             theResponse = {success: true, body: theResponseBody};
 
-        beforeEach(function () {
-            userResource = _Restsource.create('/api/user');
-        });
+
+        beforeEach(inject(function (_userRestsource_) {
+            userResource = _userRestsource_;
+        }));
 
         it('should send a request to create a user', function () {
             $httpBackend.expectPUT('/api/user', theUser).respond(theResponse);

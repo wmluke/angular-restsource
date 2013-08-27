@@ -15,16 +15,47 @@ $ bower install angular-restsource --save
 Load the `angular-restsource` modules into your app and configure...
 
 ```javascript
-angular.module('app', ['angular-restsource']);
+angular.module('app', ['angular-restsource'])
+    .config(['restsourceProvider', function (restsourceProvider) {
+
+        // Create a userRestsource that pulls data from http://localhost:9999/api/user
+        restsourceProvider.provide('userRestsource', 'http://localhost:9999/api/user')
+
+            // Add $http config's to be used with each call
+
+            // Enable CORS support
+            .httpConfig({withCredentials: true})
+
+            // Use the bodyResponseInterceptor to return `response.data.body` and `response.data.error`
+            // for success and error responses respectively.  ENABLED BY DEFAULT.
+            .useBodyResponseInterceptor(true)
+
+            // Like `$httpProvider.responseInterceptors`, `addResponseInterceptor` takes either
+            // a function or a service string
+
+            // Add a response interceptor to log requests
+            .addResponseInterceptor(['$log', function ($log) {
+                return function (promise) {
+                    promise.success(function (body, status, headers, config) {
+                        $log.log([config.method, config.url, status].join(' '));
+                        $log.log('  params: ' + JSON.stringify(config.params));
+                        if (config.data) {
+                            $log.log('  data: ' + JSON.stringify(config.data));
+                        }
+                    });
+                    return promise;
+                };
+            }]);
+    }]);
 ```
 
 ## Usage
 
-Register a Restsource service
+Alternatively, register a Restsource service
 
 ```javascript
-    angular.module('angular-restsource-demo-app').factory('userRestsource', ['Restsource', 'env', function (Restsource, env) {
-        return Restsource.create(env.apiUrl + '/user');
+    angular.module('angular-restsource-demo-app').factory('userRestsource', ['restsource', 'env', function (restsource, env) {
+        return restsource(env.apiUrl + '/user');
     }]);
 ```
 
@@ -78,6 +109,8 @@ angular.module('angular-restsource-demo-app')
 ```
 
 ### API
+
+See https://github.com/AresProjectManagement/angular-restsource/blob/master/test/spec/angular-restsource-spec.js
 
 ### Sample App
 
