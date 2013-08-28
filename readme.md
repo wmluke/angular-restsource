@@ -26,6 +26,15 @@ angular.module('app', ['angular-restsource'])
             // Enable CORS support
             .httpConfig({withCredentials: true})
 
+            // Add a custom verb to read the user's name from GET http://localhost:9999/api/user/:id/name
+            // The function transforms the method signature into a `$http` config per http://docs.angularjs.org/api/ng.$http
+            .verb('readName', function (id, cfg) {
+                return angular.extend(cfg || {}, {
+                    method: 'GET',
+                    url: '/' + id + '/name'
+                });
+            })
+
             // Use the bodyResponseInterceptor to return `response.data.body` and `response.data.error`
             // for success and error responses respectively.  ENABLED BY DEFAULT.
             .useBodyResponseInterceptor(true)
@@ -77,6 +86,12 @@ angular.module('angular-restsource-demo-app')
         $scope.read = function (id) {
             userRestsource.read(id).success(function (user) {
                 $scope.selectedUser = user;
+            });
+        };
+
+        $scope.readName = function (id) {
+            userRestsource.readName(id).success(function (name) {
+                alert(name);
             });
         };
 
