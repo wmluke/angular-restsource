@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angular-restsource-demo-app', ['angular-restsource'])
+angular.module('angular-restsource-demo-app', ['ngRoute', 'angular-restsource'])
     .config(['restsourceProvider', function (restsourceProvider) {
 
         // Create a userRestsource that pulls data from http://localhost:9999/api/user
