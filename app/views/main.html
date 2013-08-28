@@ -11,9 +11,9 @@
                 </tr>
                 </thead>
                 <tdbody>
-                    <tr ng-repeat="user in users" ng-click="read(user.id)">
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.name }}</td>
+                    <tr ng-repeat="user in users">
+                        <td ng-click="read(user.id)">{{ user.id }}</td>
+                        <td ng-click="readName(user.id)">{{ user.name }}</td>
                     </tr>
                 </tdbody>
             </table>

@@ -11,6 +11,15 @@ angular.module('angular-restsource-demo-app', ['angular-restsource'])
             // Enable CORS support
             .httpConfig({withCredentials: true})
 
+            // Add a custom verb to read the user's name from GET http://localhost:9999/api/user/:id/name
+            // The function transforms the method signature into a `$http` config per http://docs.angularjs.org/api/ng.$http
+            .verb('readName', function (id, cfg) {
+                return angular.extend(cfg || {}, {
+                    method: 'GET',
+                    url: '/' + id + '/name'
+                });
+            })
+
             // Use the bodyResponseInterceptor to return `response.data.body` and `response.data.error`
             // for success and error responses respectively.  ENABLED BY DEFAULT.
             .useBodyResponseInterceptor(true)
@@ -21,8 +30,9 @@ angular.module('angular-restsource-demo-app', ['angular-restsource'])
             // Add a response interceptor to log requests
             .addResponseInterceptor(['$log', function ($log) {
                 return function (promise) {
+                    var start = new Date();
                     promise.success(function (body, status, headers, config) {
-                        $log.log([config.method, config.url, status].join(' '));
+                        $log.log([config.method, config.url, status, (new Date() - start) + 'msec'].join(' '));
                         $log.log('  params: ' + JSON.stringify(config.params));
                         if (config.data) {
                             $log.log('  data: ' + JSON.stringify(config.data));

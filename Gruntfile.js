@@ -202,18 +202,30 @@ module.exports = function (grunt) {
             }
         },
         uglify: {
+            options: {
+                banner: ['/**! ',
+                    ' * <%= pkg.name %> v<%= pkg.version %>',
+                    ' * Copyright (c) 2013 <%= pkg.author %>',
+                    ' */\n'].join('\n')
+            },
             dist: {
                 files: {
                     '<%= yeoman.dist %>/scripts/<%= pkg.name %>.min.js': ['<%= concat.scripts.dest %>']
                 }
             }
-        }
+        },
+        bumpup: ['package.json', 'bower.json']
     });
 
     // load all grunt tasks
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
     grunt.renameTask('regarde', 'watch');
+
+    grunt.registerTask('bump', function (type) {
+        type = type ? type : 'patch';
+        grunt.task.run('bumpup:' + type);
+    });
 
     /**
      * Test debugging tasks

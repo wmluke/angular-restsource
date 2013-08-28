@@ -11,7 +11,13 @@ describe('Service: Restsource', function () {
     beforeEach(module('angular-restsource'));
 
     beforeEach(module(function (restsourceProvider) {
-        restsourceProvider.provide('userRestsource', '/api/user');
+        restsourceProvider.provide('userRestsource', '/api/user')
+            .verb('readName', function (id, cfg) {
+                return angular.extend(cfg || {}, {
+                    method: 'GET',
+                    url: '/' + id + '/name'
+                });
+            });
     }));
 
     // instantiate service
@@ -100,6 +106,20 @@ describe('Service: Restsource', function () {
             });
 
             $httpBackend.flush();
+        });
+
+        describe('Restsource instance with a custom readName verb', function () {
+
+            it('should send a request to read a user\'s name', function () {
+
+                $httpBackend.expectGET('/api/user/123abc/name').respond(theResponse);
+
+                userResource.readName('123abc').success(function (body) {
+                    expect(body).toBe(theResponseBody);
+                });
+
+                $httpBackend.flush();
+            });
         });
 
         describe('Restsource:save', function () {

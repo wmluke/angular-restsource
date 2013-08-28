@@ -12,7 +12,8 @@
         var _opts = angular.extend({
             idField: 'id',
             responseInterceptors: [],
-            httpConfig: {}
+            httpConfig: {},
+            verbs: {}
         }, options);
 
         var _self = this;
@@ -34,42 +35,23 @@
             }
         });
 
-        this.create = function (record, cfg) {
-            return _intercept($http.put(rootUrl, record, _defaultCfg(cfg)));
-        };
-
-        this.read = function (id, cfg) {
-            var url = [rootUrl];
-            if (id) {
-                url.push(id);
+        Object.defineProperty(this, 'options', {
+            get: function () {
+                return _opts;
             }
-            return _intercept($http.get(url.join('/'), _defaultCfg(cfg)));
-        };
+        });
 
-        this.update = function (record, cfg) {
-            return _intercept($http.post(rootUrl, record, _defaultCfg(cfg)));
-        };
+        // Create verb methods
+        angular.forEach(_opts.verbs, function (verb, name) {
+            _self[name] = function () {
+                var config = _defaultCfg(verb.apply(_self, arguments));
+                config.url = rootUrl + config.url;
+                return _intercept($http(config));
+            };
+        });
 
         this.save = function (record, cfg) {
             return record[_opts.idField] ? _self.update(record, _defaultCfg(cfg)) : _self.create(record, _defaultCfg(cfg));
-        };
-
-        this.list = function (page, perPage, cfg) {
-            cfg = angular.extend({
-                params: {
-                    page: page,
-                    perPage: perPage
-                }
-            }, cfg);
-            return _intercept($http.get(rootUrl, _defaultCfg(cfg)));
-        };
-
-        this.delete = function (id, cfg) {
-            var url = [rootUrl];
-            if (id) {
-                url.push(id);
-            }
-            return _intercept($http.delete(url.join('/'), _defaultCfg(cfg)));
         };
 
         this.clone = function (opts) {
@@ -87,6 +69,7 @@
                     var _self = this;
                     var _httpConfig = {};
                     var _responseInterceptors = [];
+                    var _verbs = {};
                     var _useBodyResponseInterceptor = true;
 
                     this.httpConfig = function (config) {
@@ -104,6 +87,52 @@
                         return _self;
                     };
 
+                    this.verb = function (name, argumentTransformer) {
+                        _verbs[name] = argumentTransformer;
+                        return _self;
+                    };
+
+                    this.verb('create', function (record, cfg) {
+                        return angular.extend(cfg || {}, {
+                            method: 'PUT',
+                            url: '',
+                            data: record
+                        });
+                    });
+
+                    this.verb('read', function (id, cfg) {
+                        return angular.extend(cfg || {}, {
+                            method: 'GET',
+                            url: '/' + id
+                        });
+                    });
+
+                    this.verb('update', function (record, cfg) {
+                        return angular.extend(cfg || {}, {
+                            method: 'POST',
+                            url: '',
+                            data: record
+                        });
+                    });
+
+                    this.verb('list', function (page, perPage, cfg) {
+                        return angular.extend(cfg || {}, {
+                            method: 'GET',
+                            url: '',
+                            params: {
+                                page: page,
+                                perPage: perPage
+                            }
+                        });
+                    });
+
+                    this.verb('delete', function (id, cfg) {
+                        return angular.extend(cfg || {}, {
+                            method: 'DELETE',
+                            url: '/' + id
+                        });
+                    });
+
                     this.$get = function ($injector, restsource) {
                         if (_useBodyResponseInterceptor) {
                             _responseInterceptors.push('bodyResponseInterceptor');
@@ -114,6 +143,7 @@
                         });
                         return restsource(url, {
                             httpConfig: _httpConfig,
+                            verbs: _verbs,
                             responseInterceptors: interceptors
                         });
                     };

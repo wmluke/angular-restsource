@@ -1,6 +1,6 @@
 {
     "name": "angular-restsource",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Restful resources for AngularJS",
     "author": "Ares Project Management, LLC",
     "dependencies": {
@@ -37,6 +37,7 @@
         "grunt-contrib-csslint": "~0.1.2",
         "grunt-build-lifecycle": "~0.1.1",
         "grunt-express-server": "~0.4.1",
+        "grunt-bumpup": "~0.2.0",
         "express": "~3.3.4",
         "cors": "~1.0.1",
         "karma-ng-scenario": "~0.1.0",

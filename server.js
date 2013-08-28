@@ -48,6 +48,11 @@ app.get('/api/user/:id', function (req, res) {
     res.json({body: user});
 });
 
+app.get('/api/user/:id/name', function (req, res) {
+    var user = users[req.params.id];
+    res.json({body: user.name});
+});
+
 // Index
 app.get('/api/user', function (req, res) {
     res.json({body: _.values(users)});

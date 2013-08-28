@@ -1,3 +1,4 @@
+/* global alert */
 'use strict';
 
 angular.module('angular-restsource-demo-app')
@@ -15,6 +16,12 @@ angular.module('angular-restsource-demo-app')
         $scope.read = function (id) {
             userRestsource.read(id).success(function (user) {
                 $scope.selectedUser = user;
+            });
+        };
+
+        $scope.readName = function (id) {
+            userRestsource.readName(id).success(function (name) {
+                alert(name);
             });
         };
 
