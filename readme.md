@@ -43,7 +43,9 @@ The `restsourceProvider` allows you to...
 * specify default configs to use with each `$http` call by each restsource
 * add custom verb methods
 * add response interceptors
-* disable the `bodyResponseInterceptor` enabled by default
+* disable the `bodyResponseInterceptor` enabled by default 
+
+Example:
 
 ```javascript
     .config(['restsourceProvider', function (restsourceProvider) {
