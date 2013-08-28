@@ -71,9 +71,21 @@
                     var _responseInterceptors = [];
                     var _verbs = {};
                     var _useBodyResponseInterceptor = true;
+                    var _defaultListLimits = {
+                        page: 1,
+                        perPage: 25
+                    };
 
                     this.httpConfig = function (config) {
                         _httpConfig = config;
+                        return _self;
+                    };
+
+                    this.defaultListLimits = function (page, perPage) {
+                        _defaultListLimits = {
+                            page: page,
+                            perPage: perPage
+                        };
                         return _self;
                     };
 
@@ -120,8 +132,8 @@
                             method: 'GET',
                             url: '',
                             params: {
-                                page: page,
-                                perPage: perPage
+                                page: page || _defaultListLimits.page,
+                                perPage: perPage || _defaultListLimits.perPage
                             }
                         });
                     });

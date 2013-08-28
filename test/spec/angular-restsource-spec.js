@@ -76,7 +76,19 @@ describe('Service: Restsource', function () {
             $httpBackend.flush();
         });
 
-        it('should send a request to list users', function () {
+        it('should send a request to list users with default page and perPage params', function () {
+
+            $httpBackend.expectGET('/api/user?page=1&perPage=25').respond(theResponse);
+
+            userResource.list().success(function (body) {
+                expect(body).toBe(theResponseBody);
+            });
+
+            $httpBackend.flush();
+
+        });
+
+        it('should send a request to list users with page and perPage params', function () {
 
             $httpBackend.expectGET('/api/user?page=2&perPage=5').respond(theResponse);
 

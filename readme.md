@@ -58,6 +58,9 @@ Example:
             // Enable CORS support
             .httpConfig({withCredentials: true})
 
+            // Set default values for `page` and `perPage` query params.  Defaults are 1 and 25.
+            .defaultListLimits(1, 10)
+
             // Add a custom verb to read the user's name from GET http://localhost:9999/api/user/:id/name
             // The function transforms the method signature into a `$http` config per http://docs.angularjs.org/api/ng.$http
             .verb('readName', function (id, cfg) {
