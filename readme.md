@@ -4,7 +4,25 @@
 
 [![Build Status](https://travis-ci.org/AresProjectManagement/angular-restsource.png?branch=master)](https://travis-ci.org/AresProjectManagement/angular-restsource)
 
-## Installation
+`angular-restsource` allows you to easily define `RESTful` API clients with very little boilerplate.
+
+By default `angular-restsource` maps CRUD verbs to a `RESTful` API as follows...
+
+```
+VERB        METHOD      URL
+--------------------------------------
+create      PUT         /:root-url
+read        GET         /:root-url/:id
+list        GET         /:root-url
+update      POST        /:root-url
+delete      DELETE      /:root-url/:id
+```
+
+However, `angular-restsource` makes it easy to override any of these mappings and even create custom ones.
+
+Finally, each `angular-restsource` verb returns a `$http` promise.
+
+## Install
 
 Download [angular-restsource.js](https://github.com/AresProjectManagement/angular-restsource/blob/master/dist/scripts/angular-restsource.js) or install with bower.
 
@@ -12,10 +30,22 @@ Download [angular-restsource.js](https://github.com/AresProjectManagement/angula
 $ bower install angular-restsource --save
 ```
 
-Load the `angular-restsource` modules into your app and configure...
+Load the `angular-restsource` module into your app...
 
 ```javascript
 angular.module('app', ['angular-restsource'])
+```
+
+## Configure
+
+The `restsourceProvider` allows you to...
+* define `restsource`'s for API endpoints
+* specify default configs to use with each `$http` call by each restsource
+* add custom verb methods
+* add response interceptors
+* disable the `bodyResponseInterceptor` enabled by default
+
+```javascript
     .config(['restsourceProvider', function (restsourceProvider) {
 
         // Create a userRestsource that pulls data from http://localhost:9999/api/user
@@ -58,15 +88,15 @@ angular.module('app', ['angular-restsource'])
     }]);
 ```
 
-## Usage
-
-Alternatively, register a Restsource service
+Alternatively, you can register a Restsource via `Module.factory`...
 
 ```javascript
     angular.module('angular-restsource-demo-app').factory('userRestsource', ['restsource', 'env', function (restsource, env) {
         return restsource(env.apiUrl + '/user');
     }]);
 ```
+
+## Usage
 
 Use the Restsource
 
