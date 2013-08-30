@@ -11,10 +11,10 @@ By default `angular-restsource` maps CRUD verbs to a `RESTful` API as follows...
 ```
 VERB        METHOD      URL
 --------------------------------------
-create      PUT         /:root-url
+create      POST        /:root-url
 read        GET         /:root-url/:id
 list        GET         /:root-url
-update      POST        /:root-url
+update      PUT         /:root-url/:id
 delete      DELETE      /:root-url/:id
 ```
 

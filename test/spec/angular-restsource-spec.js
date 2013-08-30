@@ -55,7 +55,7 @@ describe('Service: Restsource', function () {
         }));
 
         it('should send a request to create a user', function () {
-            $httpBackend.expectPUT('/api/user', theUser).respond(theResponse);
+            $httpBackend.expectPOST('/api/user', theUser).respond(theResponse);
 
             var promise = userResource.create(theUser);
             promise.success(function (body) {
@@ -101,7 +101,7 @@ describe('Service: Restsource', function () {
         });
 
         it('should send a request to update a user', function () {
-            $httpBackend.expectPOST('/api/user', theUser).respond(theResponse);
+            $httpBackend.expectPUT('/api/user/123', theUser).respond(theResponse);
 
             userResource.update(theUser).success(function (body) {
                 expect(body).toBe(theResponseBody);
@@ -140,7 +140,7 @@ describe('Service: Restsource', function () {
                 newUser = {name: 'Yo Momma'};
 
             it('should send a request to create the user when the user has no ID', function () {
-                $httpBackend.expectPUT('/api/user', newUser).respond(theResponse);
+                $httpBackend.expectPOST('/api/user', newUser).respond(theResponse);
 
                 userResource.save(newUser).success(function (body) {
                     expect(body).toBe(theResponseBody);
@@ -150,7 +150,7 @@ describe('Service: Restsource', function () {
             });
 
             it('should send a request to update the user when the user has an ID', function () {
-                $httpBackend.expectPOST('/api/user', existingUser).respond(theResponse);
+                $httpBackend.expectPUT('/api/user/123', existingUser).respond(theResponse);
 
                 userResource.save(existingUser).success(function (body) {
                     expect(body).toBe(theResponseBody);

@@ -67,17 +67,26 @@
 
                 return $provide.provider(name, function () {
                     var _self = this;
-                    var _httpConfig = {};
-                    var _responseInterceptors = [];
-                    var _verbs = {};
+                    var _options = {
+                        idField: 'id',
+                        httpConfig: {},
+                        verbs: {},
+                        responseInterceptors: []
+                    };
+
                     var _useBodyResponseInterceptor = true;
                     var _defaultListLimits = {
                         page: 1,
                         perPage: 25
                     };
 
+                    this.idField = function (fieldName) {
+                        _options.idField = fieldName;
+                        return _self;
+                    };
+
                     this.httpConfig = function (config) {
-                        _httpConfig = config;
+                        _options.httpConfig = config;
                         return _self;
                     };
 
@@ -95,18 +104,18 @@
                     };
 
                     this.addResponseInterceptor = function (interceptor) {
-                        _responseInterceptors.push(interceptor);
+                        _options.responseInterceptors.push(interceptor);
                         return _self;
                     };
 
                     this.verb = function (name, argumentTransformer) {
-                        _verbs[name] = argumentTransformer;
+                        _options.verbs[name] = argumentTransformer;
                         return _self;
                     };
 
                     this.verb('create', function (record, cfg) {
                         return angular.extend(cfg || {}, {
-                            method: 'PUT',
+                            method: 'POST',
                             url: '',
                             data: record
                         });
@@ -121,8 +130,8 @@
 
                     this.verb('update', function (record, cfg) {
                         return angular.extend(cfg || {}, {
-                            method: 'POST',
-                            url: '',
+                            method: 'PUT',
+                            url: '/' + record[_options.idField],
                             data: record
                         });
                     });
@@ -147,17 +156,14 @@
 
                     this.$get = function ($injector, restsource) {
                         if (_useBodyResponseInterceptor) {
-                            _responseInterceptors.push('bodyResponseInterceptor');
+                            _options.responseInterceptors.unshift('bodyResponseInterceptor');
                         }
                         var interceptors = [];
-                        angular.forEach(_responseInterceptors, function (interceptor) {
+                        angular.forEach(_options.responseInterceptors, function (interceptor) {
                             interceptors.push(angular.isString(interceptor) ? $injector.get(interceptor) : $injector.invoke(interceptor));
                         });
-                        return restsource(url, {
-                            httpConfig: _httpConfig,
-                            verbs: _verbs,
-                            responseInterceptors: interceptors
-                        });
+                        _options.responseInterceptors = interceptors;
+                        return restsource(url, _options);
                     };
                     this.$get.$inject = ['$injector', 'restsource'];
                 });
